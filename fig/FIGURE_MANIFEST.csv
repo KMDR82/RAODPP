@@ -1,4 +1,7 @@
 figure,sources
+budget_sweep.pdf,/home/aakkaya/RAODpp/output/runs.csv
+umap_lowconf.pdf,/home/aakkaya/RAODpp/output/figdata/umap_coords.csv
+training_curves.pdf,/home/aakkaya/RAODpp/output/figdata/training_curves.csv
 size_bands.pdf,/home/aakkaya/RAODpp/output/figdata/ap_size_bands.csv
 pareto.pdf,/home/aakkaya/RAODpp/output/runs.csv
 resolution_curve.pdf,/home/aakkaya/RAODpp/output/runs.csv
