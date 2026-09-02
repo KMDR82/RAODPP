@@ -1,4 +1,9 @@
 figure,sources
+pareto.pdf,/home/aakkaya/RAODpp/output/runs.csv
+resolution_curve.pdf,/home/aakkaya/RAODpp/output/runs.csv
+enrichment.pdf,/home/aakkaya/RAODpp/output/runs.csv
+conf_precision.pdf,/home/aakkaya/RAODpp/output/figdata/calib_reliability.csv; /home/aakkaya/RAODpp/output/figdata/calib_operating_point.csv
+retrieval_consistency.pdf,/home/aakkaya/RAODpp/output/figdata/retrieval_quality_per_class_centered.csv
 iso_latency.pdf,/home/aakkaya/RAODpp/output/figdata/iso_visdrone_latency_curve.csv
 iso_energy.pdf,/home/aakkaya/RAODpp/output/figdata/iso_visdrone_energy_curve.csv
 iso_uavdt_latency.pdf,/home/aakkaya/RAODpp/output/figdata/iso_uavdt_latency_curve.csv
