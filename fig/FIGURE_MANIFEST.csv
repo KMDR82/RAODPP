@@ -1,4 +1,5 @@
 figure,sources
+size_bands.pdf,/home/aakkaya/RAODpp/output/figdata/ap_size_bands.csv
 pareto.pdf,/home/aakkaya/RAODpp/output/runs.csv
 resolution_curve.pdf,/home/aakkaya/RAODpp/output/runs.csv
 enrichment.pdf,/home/aakkaya/RAODpp/output/runs.csv
