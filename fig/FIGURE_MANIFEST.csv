@@ -10,5 +10,7 @@ conf_precision.pdf,/home/aakkaya/RAODpp/output/figdata/calib_reliability.csv; /h
 retrieval_consistency.pdf,/home/aakkaya/RAODpp/output/figdata/retrieval_quality_per_class_centered.csv
 iso_latency.pdf,/home/aakkaya/RAODpp/output/figdata/iso_visdrone_latency_curve.csv
 iso_energy.pdf,/home/aakkaya/RAODpp/output/figdata/iso_visdrone_energy_curve.csv
+iso_energy_marginal.pdf,/home/aakkaya/RAODpp/output/figdata/iso_visdrone_energy_marginal_curve.csv
 iso_uavdt_latency.pdf,/home/aakkaya/RAODpp/output/figdata/iso_uavdt_latency_curve.csv
 iso_uavdt_energy.pdf,/home/aakkaya/RAODpp/output/figdata/iso_uavdt_energy_curve.csv
+iso_uavdt_energy_marginal.pdf,/home/aakkaya/RAODpp/output/figdata/iso_uavdt_energy_marginal_curve.csv
