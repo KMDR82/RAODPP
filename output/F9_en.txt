@@ -1,0 +1,60 @@
+WARNING: ['E1', 'E2', 'E3', 'E4', 'E5', 'F3', 'F5', 'F5b15', 'F5b30'] appear in runs.csv for this dataset but belong to no arm, so they take part in no comparison. Add them to ARMS or ignore deliberately.
+cost = energy (J/frame) | metric = mAP50_95 | seeds = [42, 123, 2024]
+
+resolution  covers 0.287-0.760 J/frame  (4 points: 0.29, 0.39, 0.57, 0.76)  [E0, R1280, R1536, R960]
+capacity    covers 0.287-1.223 J/frame  (4 points: 0.29, 0.48, 0.83, 1.26)  [E0, L640, M640, S640]
+capacity_mixed covers 0.477-1.052 J/frame  (3 points: 0.48, 0.69, 1.08)  [S1280, S640, S960]
+p2head      covers 0.375-0.563 J/frame  (2 points: 0.36, 0.58)  [P640, P960]
+
+resolution vs capacity  over 0.287-0.760 J/frame
+  mean difference (resolution - capacity) = +0.0550 [+0.0545, +0.0557]  p=0.0000
+  at the low end  (0.287): +0.0011
+  at the high end (0.760): +0.0776
+  -> ARM resolution ahead (practically relevant)
+
+resolution vs capacity_mixed  over 0.477-0.760 J/frame
+  mean difference (resolution - capacity_mixed) = +0.0331 [+0.0308, +0.0346]  p=0.0013
+  at the low end  (0.477): +0.0501
+  at the high end (0.760): +0.0220
+  -> ARM resolution ahead (practically relevant)
+
+resolution vs p2head  over 0.375-0.563 J/frame
+  mean difference (resolution - p2head) = +0.0378 [+0.0351, +0.0402]  p=0.0015
+  at the low end  (0.375): +0.0412
+  at the high end (0.563): +0.0321
+  -> ARM resolution ahead (practically relevant)
+
+capacity vs capacity_mixed  over 0.477-1.052 J/frame
+  mean difference (capacity - capacity_mixed) = -0.0489 [-0.0502, -0.0475]  p=0.0002
+  at the low end  (0.477): -0.0020
+  at the high end (1.052): -0.0733
+  -> ARM capacity_mixed ahead (practically relevant)
+
+capacity vs p2head  over 0.375-0.563 J/frame
+  mean difference (capacity - p2head) = -0.0160 [-0.0181, -0.0147]  p=0.0044
+  at the low end  (0.375): -0.0047
+  at the high end (0.563): -0.0329
+  -> ARM p2head ahead (practically relevant)
+
+capacity_mixed vs p2head  over 0.477-0.563 J/frame
+  mean difference (capacity_mixed - p2head) = -0.0111 [-0.0132, -0.0084]  p=0.0161
+  at the low end  (0.477): -0.0126
+  at the high end (0.563): -0.0097
+  -> ARM p2head ahead (practically relevant)
+
+=== conditions (mean over seeds) ===
+       mAP50_95  ms_mean  energy_j  energy_marginal_j
+exp                                                  
+E0       0.1863   4.9793    0.2851             0.0992
+S640     0.2239   5.0990    0.4684             0.2533
+R960     0.2539   5.2769    0.3781             0.1695
+S960     0.2951   5.2977    0.6874             0.4696
+P640     0.2077   5.5479    0.3684             0.1230
+P960     0.2667   5.9854    0.5716             0.3338
+M640     0.2513   6.1603    0.8122             0.5891
+R1280    0.2985   6.4959    0.5715             0.3166
+R1536    0.3249   7.0205    0.7611             0.4687
+S1280    0.3360   7.3377    1.0744             0.7534
+L640     0.2672   7.8456    1.2379             0.9342
+
+written: /home/aakkaya/RAODpp/output/figdata/iso_visdrone_energy_curve.csv

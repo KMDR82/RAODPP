@@ -1,0 +1,60 @@
+WARNING: ['E1', 'E2', 'E3', 'E4', 'E5', 'F3', 'F5', 'F5b15', 'F5b30'] appear in runs.csv for this dataset but belong to no arm, so they take part in no comparison. Add them to ARMS or ignore deliberately.
+cost = latency (ms) | metric = mAP50_95 | seeds = [42, 123, 2024]
+
+resolution  covers 5.069-6.950 ms  (4 points: 4.96, 5.33, 6.49, 6.95)  [E0, R1280, R1536, R960]
+capacity    covers 4.985-7.817 ms  (4 points: 4.96, 5.19, 6.12, 7.88)  [E0, L640, M640, S640]
+capacity_mixed covers 5.190-7.280 ms  (3 points: 5.19, 5.37, 7.32)  [S1280, S640, S960]
+p2head      covers 5.618-5.936 ms  (2 points: 5.50, 5.94)  [P640, P960]
+
+resolution vs capacity  over 5.069-6.950 ms
+  mean difference (resolution - capacity) = +0.0386 [+0.0338, +0.0474]  p=0.0127
+  at the low end  (5.069): +0.0003
+  at the high end (6.950): +0.0630
+  -> ARM resolution ahead (practically relevant)
+
+resolution vs capacity_mixed  over 5.190-6.950 ms
+  mean difference (resolution - capacity_mixed) = -0.0248 [-0.0270, -0.0234]  p=0.0020
+  at the low end  (5.190): -0.0163
+  at the high end (6.950): -0.0065
+  -> ARM capacity_mixed ahead (practically relevant)
+
+resolution vs p2head  over 5.618-5.936 ms
+  mean difference (resolution - p2head) = +0.0337 [+0.0257, +0.0412]  p=0.0172
+  at the low end  (5.618): +0.0493
+  at the high end (5.936): +0.0181
+  -> ARM resolution ahead (practically relevant)
+
+capacity vs capacity_mixed  over 5.190-7.280 ms
+  mean difference (capacity - capacity_mixed) = -0.0666 [-0.0761, -0.0617]  p=0.0051
+  at the low end  (5.190): -0.0408
+  at the high end (7.280): -0.0730
+  -> ARM capacity_mixed ahead (practically relevant)
+
+capacity vs p2head  over 5.618-5.936 ms
+  mean difference (capacity - p2head) = -0.0023 [-0.0148, +0.0124]  p=0.8002
+  at the low end  (5.618): +0.0132
+  at the high end (5.936): -0.0178
+  -> ARM p2head ahead (below the 0.005 floor)
+
+capacity_mixed vs p2head  over 5.618-5.936 ms
+  mean difference (capacity_mixed - p2head) = +0.0662 [+0.0586, +0.0735]  p=0.0042
+  at the low end  (5.618): +0.0844
+  at the high end (5.936): +0.0480
+  -> ARM capacity_mixed ahead (practically relevant)
+
+=== conditions (mean over seeds) ===
+       mAP50_95  ms_mean  energy_j  energy_marginal_j
+exp                                                  
+E0       0.1863   4.9793    0.2851             0.0992
+S640     0.2239   5.0990    0.4684             0.2533
+R960     0.2539   5.2769    0.3781             0.1695
+S960     0.2951   5.2977    0.6874             0.4696
+P640     0.2077   5.5479    0.3684             0.1230
+P960     0.2667   5.9854    0.5716             0.3338
+M640     0.2513   6.1603    0.8122             0.5891
+R1280    0.2985   6.4959    0.5715             0.3166
+R1536    0.3249   7.0205    0.7611             0.4687
+S1280    0.3360   7.3377    1.0744             0.7534
+L640     0.2672   7.8456    1.2379             0.9342
+
+written: /home/aakkaya/RAODpp/output/figdata/iso_visdrone_latency_curve.csv
