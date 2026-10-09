@@ -1,0 +1,182 @@
+% =====================================================================
+% RAOD++ / iso-cost study — Discussion
+% Claims here are limited to what Section 4 measured.
+% =====================================================================
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Why the two axes disagree}
+\label{sec:discussion:mechanism}
+
+The central result is that the same question has two answers depending on the resource
+being spent. The power measurements suggest why. Raising the input from $640$ to $1536$
+pixels multiplies the pixel count by $5.8$ but moves board power from $57.3$ to
+$108.4$\,W, a factor of $1.9$; moving from the nano to the small model at $1280$ pixels
+moves it from $88.0$ to $146.4$\,W while also increasing latency. Board power includes an
+idle floor of $37.3$\,W on this device, and removing it sharpens the contrast rather than
+softening it: the marginal draw of inference rises from $19.9$ to $71.1$\,W along the
+resolution arm and from $50.7$ to $109.1$\,W along the capacity arm. Reusing one set of weights over
+more pixels is arithmetically heavier but memory-cheaper than moving a larger set of
+weights and activations, and on modern accelerators energy tracks data movement more
+closely than it tracks arithmetic.
+
+Latency at batch one does not expose this difference, and for a specific reason: a model of
+this size does not saturate the device. Raising the input from $640$ to $1280$ multiplies
+pixels by four while latency rises only from $4.98$ to $6.50$\,ms, a factor of $1.31$,
+because a substantial share of the wall-clock time is spent in preprocessing, non-maximum
+suppression and framework overhead rather than in convolutions. Under those conditions a
+larger model is nearly free in wall-clock terms and expensive in joules, which is precisely
+the ordering Table~\ref{tab:isocost} reports.
+
+This also bounds the claim. On hardware where compute is the binding constraint --- an
+embedded accelerator, a larger backbone, or batched inference --- the latency ranking could
+change, while the energy argument, resting on data movement, is the more likely of the two
+to transfer. We measured neither case and do not claim either.
+
+\subsection{Which energy a deployed system actually spends}
+\label{sec:discussion:energy}
+
+Total board energy, $\bar{P} L$, charges a configuration for every watt the card draws
+while it works. That is the right quantity only if the detector occupies the whole frame
+period. An airborne platform with a 30\,Hz camera has a frame period of $33.3$\,ms, and the
+detectors measured here finish in $5$ to $7$\,ms, so for most of each period the device
+sits at its idle floor whichever configuration is installed. Writing $T$ for the frame
+period and $t$ for the time the detector runs, the energy spent per frame is closer to
+\begin{equation}
+  E_{\text{frame}} \;=\; P_{\text{idle}} T \;+\; \big(P_{\text{active}} - P_{\text{idle}}\big)\, t ,
+  \label{eq:frame-energy}
+\end{equation}
+in which the first term is the same for every configuration and only the second
+discriminates between them. That second term is exactly the marginal energy reported as a
+robustness check in Section~\ref{sec:results:isocost}.
+
+This does not change the verdict, since the ordering is the same under both definitions,
+and the pre-registered comparison was fixed on total board energy before the idle floor was
+measured. It does change which number a practitioner should read. At the duty cycles a UAV
+detector runs at, the marginal figure is the more decisive one, and its margin is the wider
+of the two: resolution leads capacity by $0.0457$ above the idle floor against $0.0331$ on
+total power. Where a detector saturates the frame period instead, the two converge and
+total energy becomes the right measure. Reporting both, and stating the duty cycle a claim
+assumes, costs nothing.
+
+\subsection{What the field's reporting conventions hide}
+\label{sec:discussion:conventions}
+
+Published work on small-object detection from UAVs reports gains of roughly $+2.8$ to
+$+10.5$ mAP$_{50}$ from architectural modifications. Raising the input resolution of an
+unmodified nano detector, with no change to the architecture and no additional data, yields
+$+0.1386$ mAP$_{50\text{-}95}$ over the $640$ baseline, a relative gain of $74\%$. The two
+numbers are not directly comparable, which is exactly the point: resolution is rarely
+controlled in those comparisons, so an architectural gain measured at one input size and a
+baseline trained at another are reported in the same table.
+
+Two conventions contribute. First, parameters and FLOPs are reported as proxies for
+deployment cost, and in the batch-one regime they predict latency poorly: the P2 variant is
+slower than the small model at the same input size despite having fewer parameters, while
+drawing less power and therefore winning on energy where it loses on latency, and
+resolution changes move FLOPs far more than they move measured latency. Second, energy is
+almost never reported at all, although for an airborne platform the binding budget is
+frequently the battery rather than the frame period.
+
+We are not arguing that architectural work is misdirected. We are arguing that a comparison
+that does not fix a measured cost cannot tell the reader which allocation was responsible
+for the gain, and that reporting both axes is cheap relative to the training that produced
+the numbers.
+
+For the same reason this paper reports no comparison against published detectors on these
+benchmarks, and the omission is deliberate. A fair comparison would require retraining
+those methods at matched input size on the same split, and measuring their latency and
+energy on this machine; published numbers were obtained at input sizes the authors chose,
+on hardware we do not have, and with cost reported as parameters or FLOPs where it is
+reported at all. Placing them in a table beside ours would reproduce exactly the confound
+this work is about. What we claim is a controlled statement about where a fixed budget
+should be spent within one detector family, not a position on a leaderboard, and the two
+require different experiments.
+
+\subsection{Three negative results, and why they are load-bearing}
+\label{sec:discussion:negatives}
+
+The resolution finding is more informative because of what preceded it.
+
+Enriching the training data with retrieved, semantically matched instances did not help.
+All five conditions of the control matrix land within $0.0025$ mAP$_{50\text{-}95}$ of the
+baseline and all fall below it; the retrieval condition beats the no-data control by
+$0.0010$, statistically detectable and practically negligible. Raising the intervention from
+$2.7\%$ to $9.5\%$ of the existing boxes leaves accuracy flat and then degrades it, so the
+result is not an artefact of scale. The random-paste control shares the placement engine,
+budget and filters with the retrieval condition and differs only in how the neighbour is
+chosen, so the null result concerns the semantics of the retrieval and not the mechanics of
+the pasting.
+
+The retrieval stage itself is not inert. Its information content is inversely related to a
+class's share of the gallery, from $23.4$ times chance for the rarest class to exactly
+chance for the most frequent. That pattern is a useful design constraint for
+retrieval-augmented detection in general, and it also explains part of the null result:
+the classes for which retrieval carries information are the ones for which the gallery
+supplies fewest examples to paste.
+
+The second negative result concerns confidence. If small objects were merely under-ranked,
+a calibration correction would recover them at no cost. Measured over ten seeds, the
+size-conditioned confidence gap spans only $0.0295$ and runs in the direction opposite to
+that hypothesis. The detector's low confidence on small objects is an accurate report, not a
+bias. What the same measurement does show is severe: at a deployment threshold of $0.5$,
+recall on the smallest size band is $0.053$. A detector reported by its mAP alone can miss
+most of the objects it is deployed to find, and this gap between integrated and operating
+point behaviour deserves to be reported routinely.
+
+The third is our own first hypothesis. We initially predicted that resolution would beat
+capacity at fixed latency, and that prediction was rejected. The error was procedural: the
+comparison pairs were fixed before the cost axis was measured, and clean measurement showed
+that two conditions intended as a matched pair differed by $18\%$ in latency. Replacing
+pairwise comparison with the curve-based procedure of Section~\ref{sec:method:isocost} is
+what made the question answerable.
+
+\subsection{Practical guidance}
+\label{sec:discussion:guidance}
+
+For a real-time UAV detector of this class, the results support three concrete
+recommendations. When the binding constraint is the frame period, spend the budget on model
+capacity. When it is the energy budget, spend it on input resolution. In both cases, prefer
+either to adding a P2 detection head, which lost on both axes here at a comparable cost.
+
+Two caveats attach. The accuracy--resolution curve had not saturated at the largest input
+tested, so the ceiling was not located; the recommendation is about allocation under a
+budget, not an argument to raise resolution without limit. And the advantage of one arm over
+the other narrows as the budget grows, from $-0.0314$ to $-0.0101$ on latency and from
+$+0.0502$ to $+0.0229$ on energy across the measured intervals, so the choice matters most
+where budgets are tightest.
+
+\subsection{Limitations}
+\label{sec:discussion:limitations}
+
+Cost was measured on one desktop GPU at batch one. That is the deployment mode of interest,
+but the device is not saturated by a model of this size, and the latency ordering may differ
+on hardware where compute binds. No embedded validation was performed and none is claimed. Energy is NVML board power rather
+than system wall power.
+
+Two training conditions were not held constant and should temper how cleanly the factors
+are separated. The physical batch falls from 64 at 640 pixels to 6 at 1536, so
+batch-normalisation statistics are estimated over samples of different size along the
+resolution arm, and along the capacity arm as well. And early stopping reads the same split
+the results are reported on. Neither can favour one arm over the other, since both apply
+under one rule to every condition, but both mean the arms differ in slightly more than the
+single factor each is named for.
+
+The grid uses three seeds per condition; only the $640$ baseline was repeated over ten. The
+seed-to-seed standard deviation is small, which is why differences of this magnitude are
+resolvable, but confidence intervals should be read with the sample size in mind. All
+experiments use a single detector family; whether the ordering holds for two-stage or
+transformer detectors is untested.
+
+The arms are compared only over the cost interval where both were measured. Those intervals
+are finite, and the reported difference is an average over them rather than a statement
+about every possible budget. Extending an arm changes the overlap, which is why the
+confirmation runs of Section~\ref{sec:results:isocost} were added before any claim was made.
+
+Finally, the finding that the answer depends on the scarce resource emerged after the data
+were seen. It was restated as a hypothesis with a fixed success criterion before the
+confirming experiments finished, and it is reported as confirmed on VisDrone and not confirmed on UAVDT, where both
+directions replicated at comparable magnitude but neither reached corrected significance.
+Two datasets in one domain remain two datasets, and generalisation beyond aerial imagery is
+untested.
