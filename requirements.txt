@@ -1,0 +1,10 @@
+# Versions the study was run with. Python 3.14, CUDA 13.0.
+# Analysis and figures need only the bottom four; training needs torch and ultralytics.
+torch==2.13.0
+torchvision==0.28.0
+ultralytics==8.4.118
+nvidia-ml-py==13.580.65
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+matplotlib>=3.8
