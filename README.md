@@ -15,10 +15,7 @@ on the device at batch size one rather than inferred from parameter counts or FL
 ```
 scripts/     training, measurement, analysis and figure code
 notebooks/   dataset preparation and the exploratory work that preceded the grid
-output/      runs.csv, the per-run record every number is computed from
-output/figdata/   the per-figure and per-table CSVs that the paper's captions cite
 fig/         the figures as they appear in the manuscript
-tex/         manuscript source and bibliography
 ```
 
 Every number in the paper comes from `output/runs.csv` by way of a script in `scripts/`.
